@@ -1,0 +1,11 @@
+version: '3'
+services:
+    jekyll-serve:
+      image: jekyll/jekyll:4.2.2
+      volumes:
+        - '.:/srv/jekyll'
+      ports:
+        - 4000:4000
+      environment:
+        - STRAPI_TOKEN=${STRAPI_TOKEN}
+      command: jekyll serve --lsi --watch --verbose --trace
