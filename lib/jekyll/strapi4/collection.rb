@@ -28,17 +28,21 @@ module Jekyll
         # https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html#api-parameters
         # and pagination is now done in following way:
         # https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/sort-pagination.html#pagination-by-page
-        uri = URI("#{@site.endpoint}/api/#{endpoint}#{path_params}")
-        Jekyll.logger.debug "StrapiCollection get_document:" "#{collection_name} #{uri}"
-        response = strapi_request(uri)
-        response.data
+        Jekyll::Strapi::Cache.request(@site, collection_name) do
+          uri = URI("#{@site.endpoint}/api/#{endpoint}#{path_params}")
+          Jekyll.logger.debug "StrapiCollection get_document:" "#{collection_name} #{uri}"
+          response = strapi_request(uri)
+          response.data
+        end
       end
 
       def get_document(did)
-        uri_document = URI("#{@site.endpoint}/api/#{endpoint}/#{did}?populate=#{populate}")
-        Jekyll.logger.debug "StrapiCollection iterating uri_document:" "#{uri_document}"
-        strapi_request(uri_document)
-        # document
+        Jekyll::Strapi::Cache.request(@site, "#{collection_name}/#{did}") do
+          uri_document = URI("#{@site.endpoint}/api/#{endpoint}/#{did}?populate=#{populate}")
+          Jekyll.logger.debug "StrapiCollection iterating uri_document:" "#{uri_document}"
+          strapi_request(uri_document)
+          # document
+        end
       end
 
       def each

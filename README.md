@@ -180,3 +180,36 @@ strapi:
         pl: /zdjecia/:slug
 
 ```
+
+### Caching
+
+If you want to cache your requests, changed cached to true.
+
+```yaml
+strapi:
+  cached: true
+```
+
+You can change your cache key. You can use it by create _plugins/filename.rb.
+
+```ruby
+module Jekyll
+  module Strapi
+    class Cache
+      def cache_name
+        @site.config["lang"]
+      end
+    end
+  end
+end
+```
+
+To remove your caches either change your cached to false or remove them manually.
+```yaml
+strapi:
+  cached: false
+```
+
+```
+  rm -rf .jekyll-cache/Jekyll/Cache
+```
